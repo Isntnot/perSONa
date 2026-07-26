@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Persona — Ficha de Personagem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0f0d13;
+    --panel: #17141d;
+    --panel-2: #1e1a26;
+    --line: #332c3d;
+    --gold: #c9a24b;
+    --gold-dim: #8a7238;
+    --crimson: #7c1f2e;
+    --text: #e9e3d6;
+    --text-dim: #a9a1b3;
+    --ok: #5b8a6b;
+    --bad: #a34a4a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background: radial-gradient(ellipse at top, #1a1622 0%, #0f0d13 55%);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    padding: 40px 20px 120px;
+  }
+  .wrap{max-width: 980px; margin: 0 auto;}
+  h1.title{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:700;
+    font-style:italic;
+    font-size: 3rem;
+    text-align:center;
+    letter-spacing:.03em;
+    margin: 0 0 4px;
+    background: linear-gradient(180deg, var(--gold) 0%, #7a6224 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .subtitle{
+    text-align:center;
+    color:var(--text-dim);
+    font-size:.85rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    margin-bottom: 36px;
+  }
+  .card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    margin-bottom: 22px;
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:'';
+    position:absolute; left:0; top:0; bottom:0;
+    width:3px;
+    background: linear-gradient(180deg, var(--gold), var(--crimson));
+  }
+  .card-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    padding: 16px 22px 12px 26px;
+    border-bottom: 1px solid var(--line);
+  }
+  .card-num{
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.6rem;
+    color: var(--gold-dim);
+    font-weight:600;
+  }
+  .card-title{
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.5rem;
+    font-weight:600;
+    letter-spacing:.02em;
+  }
+  .card-body{padding: 18px 26px 24px;}
+  .grid{display:grid; gap:14px;}
+  .grid-2{grid-template-columns: 1fr 1fr;}
+  .grid-3{grid-template-columns: 1fr 1fr 1fr;}
+  .grid-4{grid-template-columns: repeat(4, 1fr);}
+  .grid-6{grid-template-columns: repeat(6, 1fr);}
+  @media (max-width: 760px){
+    .grid-3, .grid-4, .grid-6{grid-template-columns: 1fr 1fr;}
+  }
+  label{
+    display:block;
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    color: var(--text-dim);
+    margin-bottom: 5px;
+  }
+  input[type=text], input[type=number], select, textarea{
+    width:100%;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 9px 10px;
+    border-radius: 3px;
+    font-family:'Inter',sans-serif;
+    font-size: .92rem;
+  }
+  input:focus, select:focus, textarea:focus{
+    outline:none;
+    border-color: var(--gold-dim);
+  }
+  .readout{
+    background: #100e15;
+    border: 1px dashed var(--line);
+    color: var(--gold);
+    font-weight:700;
+    font-size:1.1rem;
+    text-align:center;
+    padding: 9px 10px;
+    border-radius: 3px;
+  }
+  .attr-block{
+    background: var(--panel-2);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding: 14px;
+    text-align:center;
+  }
+  .attr-block h4{
+    margin:0 0 8px;
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.15rem;
+    color: var(--gold);
+    letter-spacing:.05em;
+  }
+  .attr-controls{display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:8px;}
+  .attr-controls button{
+    width:26px;height:26px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    color:var(--gold);
+    border-radius:3px;
+    cursor:pointer;
+    font-size:1rem;
+    line-height:1;
+  }
+  .attr-controls button:hover{border-color:var(--gold-dim);}
+  .attr-val{font-size:1.6rem; font-weight:700; width:36px; text-align:center;}
+  .attr-mod{font-size:.8rem; color:var(--text-dim);}
+  .points-tracker{
+    text-align:center;
+    margin-bottom: 16px;
+    font-size:.95rem;
+  }
+  .points-tracker span{color:var(--gold); font-weight:700;}
+  .points-tracker.over{color:var(--bad);}
+  .pericia-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line);
+    font-size:.88rem;
+  }
+  .pericia-row:last-child{border-bottom:none;}
+  .pericia-row input[type=checkbox]{
+    width:16px;height:16px;
+    accent-color: var(--gold-dim);
+  }
+  .pericia-name{flex:1;}
+  .pericia-bonus{
+    width:34px;
+    text-align:center;
+    font-weight:700;
+    color:var(--text-dim);
+  }
+  .pericia-bonus.active{color: var(--gold);}
+  .weapon-summary, .role-summary{
+    margin-top:12px;
+    background: var(--panel-2);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding: 10px 14px;
+    font-size:.85rem;
+    color: var(--text-dim);
+  }
+  .weapon-summary b, .role-summary b{color:var(--text);}
+  .poderes{margin-top:14px;}
+  .poder-tier{margin-bottom:10px;}
+  .poder-tier h5{
+    margin:0 0 6px;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color: var(--gold-dim);
+  }
+  .poder-item{
+    display:flex; align-items:flex-start; gap:8px;
+    padding: 4px 0;
+  }
+  .poder-item input{margin-top:3px;}
+  .poder-item label{
+    margin:0; text-transform:none; letter-spacing:normal;
+    color: var(--text); font-size:.85rem; cursor:pointer;
+  }
+  .poder-item b{color:var(--gold);}
+  textarea{min-height:70px; resize:vertical;}
+  .toolbar{
+    position:fixed;
+    bottom:0; left:0; right:0;
+    background: #0b0a0e;
+    border-top: 1px solid var(--line);
+    padding: 14px 20px;
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    z-index:50;
+  }
+  .btn{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:.9rem;
+    letter-spacing:.03em;
+    padding: 11px 26px;
+    border-radius: 3px;
+    border: 1px solid var(--gold-dim);
+    background: transparent;
+    color: var(--gold);
+    cursor:pointer;
+    transition: all .15s;
+  }
+  .btn:hover{background: var(--gold-dim); color:#0f0d13;}
+  .btn.primary{background: var(--gold); color:#0f0d13;}
+  .btn.primary:hover{background:#e0bb5f;}
+  .hint{font-size:.72rem; color:var(--text-dim); margin-top:6px;}
+  @media print{
+    .toolbar{display:none;}
+    body{background:#fff; color:#000; padding:10px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="sheet">
+
+  <h1 class="title">Codex Persona</h1>
+  <div class="subtitle">Ficha de Personagem · Nível 1</div>
+
+  <!-- I. IDENTIDADE -->
+  <div class="card">
+    <div class="card-head"><span class="card-num">I</span><span class="card-title">Identidade</span></div>
+    <div class="card-body">
+      <div class="grid grid-4">
+        <div><label>Nome do Personagem</label><input type="text" id="nome"></div>
+        <div><label>Arquétipo</label><input type="text" id="arquetipo"></div>
+        <div><label>Persona (nome)</label><input type="text" id="persona"></div>
+        <div><label>Arcano</label><input type="text" id="arcano"></div>
+      </div>
+      <div class="grid grid-4" style="margin-top:14px;">
+        <div><label>Level</label><input type="number" id="nivel" value="1" min="1"></div>
+        <div><label>Tamanho</label><input type="text" id="tamanho" value="Médio"></div>
+        <div><label>Idade</label><input type="text" id="idade"></div>
+        <div><label>Gênero</label><input type="text" id="genero"></div>
+      </div>
+      <div class="grid grid-4" style="margin-top:14px;">
+        <div><label>Altura</label><input type="text" id="altura"></div>
+        <div><label>Peso</label><input type="text" id="peso"></div>
+        <div><label>Curso</label><input type="text" id="curso"></div>
+        <div><label>XP Total</label><input type="number" id="xp" value="0"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- II. ATRIBUTOS -->
+  <div class="card">
+    <div class="card-head"><span class="card-num">II</span><span class="card-title">Atributos — Compra por Pontos</span></div>
+    <div class="card-body">
+      <div class="points-tracker" id="pointsTracker">Pontos usados: <span id="pointsUsed">0</span> / 28</div>
+      <div class="grid grid-6" id="attrGrid"></div>
+      <div class="hint">Custo: 11–14 = 1/2/3/5 pts · 15–18 = 7/9/12/16 pts (ajuste os custos no código se sua mesa usar outra tabela).</div>
+    </div>
+  </div>
+
+  <!-- III. FUNÇÃO HUMANA -->
+  <div class="card">
+    <div class="card-head"><span class="card-num">III</span><span class="card-title">Função Humana</span></div>
+    <div class="card-body">
+      <div class="grid grid-2">
+        <div>
+          <label>Função</label>
+          <select id="funcao">
+            <option value="tanque">Tanque (Foco Físico)</option>
+            <option value="dps">DPS / Atacante (Foco em Agilidade)</option>
+            <option value="mago">Usuário Mágico (Foco Mental)</option>
+          </select>
+        </div>
+        <div>
+          <label>Arma</label>
+          <select id="arma">
+            <option value="leve">Lâminas Leves — +3 acerto · 1d6/1d8 (FOR/DEX)</option>
+            <option value="pesada">Lâminas Pesadas — +2 acerto · 1d10/1d12 (FOR)</option>
+            <option value="impacto">Impacto/Haste — +2 acerto · 1d10 (FOR), alcance 2</option>
+            <option value="distancia">Distância — +2 acerto · 1d8 (DEX), alcance 10/20</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-3" style="margin-top:16px;">
+        <div><label>PV Inicial</label><div class="readout" id="pvInicial">—</div></div>
+        <div><label>Pulsos de Cura</label><div class="readout" id="pulsos">—</div></div>
+        <div><label>Passiva</label><div class="readout" id="passiva" style="font-size:.75rem; font-weight:600;">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IV. DEFESAS -->
+  <div class="card">
+    <div class="card-head"><span class="card-num">IV</span><span class="card-title">Defesas</span></div>
+    <div class="card-body">
+      <div class="grid grid-4">
+        <div><label>CA</label><div class="readout" id="ca">—</div></div>
+        <div><label>Fortitude</label><div class="readout" id="fort">—</div></div>
+        <div><label>Reflexos</label><div class="readout" id="reflex">—</div></div>
+        <div><label>Vontade</label><div class="readout" id="vontade">—</div></div>
+      </div>
+      <div class="hint">CA = 10 + Mod. Destreza + bônus de Função · Fort = 10 + Mod. Constituição + bônus · Reflexos = 10 + Mod. Destreza + bônus · Vontade = 10 + Mod. Sabedoria + bônus.</div>
+    </div>
+  </div>
+
+  <!-- V. RECURSOS DE COMBATE -->
+  <div class="card">
+    <div class="card-head"><span class="card-num">V</span><span class="card-title">Recursos de Combate</span></div>
+    <div class="card-body">
+      <div class="grid grid-4">
+        <div><label>Sangramento</label><input type="text" id="sangramento"></div>
+        <div><label>Pulsos por Dia</label><input type="text" id="pulsosPorDia"></div>
+        <div><label>Pontos de Vida Atuais</label><input type="text" id="pvAtuais"></div>
+        <div><label>Pontos de Vida Temporários</label><input type="text" id="pvTemp"></div>
+      </div>
+      <div class="grid grid-2" style="margin-top:14px;">
+        <div><label>Valor de Pulso Bônus</label><input type="text" id="pulsoBonus"></div>
+        <div><label>Pulsos Atuais</label><input type="text" id="pulsosAtuais"></div>
+      </div>
+      <div style="margin-top:14px;">
+        <label>Falhas em Salvamento de Morte</label>
+        <div style="display:flex; gap:10px; margin-top:4px;">
+          <input type="checkbox" id="falha1" style="width:18px;height:18px;">
+          <input type="checkbox" id="falha2" style="width:18px;height:18px;">
+          <input type="checkbox" id="falha3" style="width:18px;height:18px;">
+        </div>
+      </div>
+      <div style="margin-top:14px;">
+        <label>Falhas Fatais</label>
+        <textarea id="falhasFatais"></textarea>
+      </div>
+      <div style="margin-top:12px;">
+        <label>Modificadores de Resistência</label>
+        <textarea id="modResistencia"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- VI. SENTIDOS & MOVIMENTO -->
+  <div class="card">
+    <div class="card-head"><span class="card-num">VI</span><span class="card-title">Sentidos &amp; Movimento</span></div>
+    <div class="card-body">
+      <div class="grid grid-2">
+        <div><label>Intuição (Sentido Passivo)</label><input type="text" id="intuicaoPassivo" placeholder="ex: 10 + Mod. Sabedoria"></div>
+        <div><label>Percepção (Sentido Passivo)</label><input type="text" id="percepcaoPassivo" placeholder="ex: 10 + Mod. Sabedoria"></div>
+      </div>
+      <div style="margin-top:12px;">
+        <label>Sentidos Especiais</label>
+        <textarea id="sentidosEspeciais"></textarea>
+      </div>
+      <div style="margin-top:14px;">
+        <label>Movimentos</label>
+        <div id="movimentosContainer"></div>
+        <button class="btn" type="button" style="margin-top:6px; padding:7px 16px; font-size:.8rem;" onclick="addMovimento()">+ Adicionar Movimento</button>
+      </div>
+      <div style="margin-top:12px;">
+        <label>Movimento Especial</label>
+        <textarea id="movimentoEspecial"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- VII. PERÍCIAS -->
+  <div class="card">
+    <div class="card-head"><span class="card-num">VII</span><span class="card-title">Perícias (escolha 3)</span></div>
+    <div class="card-body">
+      <div id="periciaSelectedCount" class="hint" style="margin-bottom:8px;">Selecionadas: 0 / 3</div>
+      <div id="periciaList"></div>
+    </div>
+  </div>
+
+  <!-- VIII. BASE PERSONA -->
+  <div class="card">
+    <div class="card-head"><span class="card-num">VIII</span><span class="card-title">Base Persona</span></div>
+    <div class="card-body">
+      <div class="grid grid-2">
+        <div>
+          <label>Elemento</label>
+          <select id="elemento">
+            <option value="fogo">Fogo (Agi) — Queimadura</option>
+            <option value="gelo">Gelo (Bufu) — Congelamento</option>
+            <option value="trovao">Trovão (Zio) — Paralisia</option>
+            <option value="vento">Vento (Garu) — Impacto</option>
+            <option value="agua">Água (Aqua) — Desequilíbrio</option>
+            <option value="nuclear">Nuclear (Frei) — Explosão</option>
+            <option value="luz">Luz (Kouha) — Cegueira</option>
+            <option value="escuridao">Escuridão (Eiha) — Dreno</option>
+          </select>
+        </div>
+        <div>
+          <label>Função Tática (Role)</label>
+          <select id="role">
+            <option value="guardiao">Guardião (Defender)</option>
+            <option value="algoz">Algoz (Striker)</option>
+            <option value="guia">Guia (Leader)</option>
+            <option value="dominador">Dominador (Controller)</option>
+          </select>
+        </div>
+      </div>
+      <div class="role-summary" id="roleSummary"></div>
+    </div>
+  </div>
+
+  <!-- IX. PODERES DE PERSONA -->
+  <div class="card">
+    <div class="card-head"><span class="card-num">IX</span><span class="card-title">Poderes de Persona (Nível 1)</span></div>
+    <div class="card-body">
+      <div class="hint" style="margin-bottom:10px;">Escolha 2 Sem Limite, 1 Por Encontro e 1 Diário — da sua Role.</div>
+      <div id="poderesContainer"></div>
+    </div>
+  </div>
+
+  <!-- X. TALENTOS -->
+  <div class="card">
+    <div class="card-head"><span class="card-num">X</span><span class="card-title">Talentos</span></div>
+    <div class="card-body">
+      <label>Um talento por linha, separado por ponto-e-vírgula: <i>Nome; Level; Pré-requisitos; Nível Mínimo; Descrição/Efeito</i></label>
+      <textarea id="talentosInput" placeholder="Golpe Rápido; 1; Destreza 14; 1; Ganha +1 em testes de iniciativa" style="min-height:100px;"></textarea>
+    </div>
+  </div>
+
+  <!-- XI. INVENTÁRIO E NOTAS -->
+  <div class="card">
+    <div class="card-head"><span class="card-num">XI</span><span class="card-title">Inventário (10 Slots) &amp; Notas</span></div>
+    <div class="card-body">
+      <label>Inventário — um item por linha (até 10)</label>
+      <textarea id="inventario" placeholder="Itens, equipamentos..."></textarea>
+      <label style="margin-top:12px;">Notas</label>
+      <textarea id="notas"></textarea>
+    </div>
+  </div>
+
+</div>
+
+<div class="toolbar">
+  <button class="btn" onclick="resetSheet()">Limpar Ficha</button>
+  <button class="btn primary" onclick="exportPDF()">Exportar PDF (abre p/ imprimir)</button>
+</div>
+
+<!-- ============ TEMPLATE DE IMPRESSÃO (réplica da ficha original) ============ -->
+<div id="printSheet">
+  <style>
+    #printSheet{
+      position:absolute;
+      left:-9999px;
+      top:0;
+      width: 794px;
+      background:#fff;
+      color:#000;
+      font-family: Arial, Helvetica, sans-serif;
+      padding: 18px;
+    }
+    #printSheet *{box-sizing:border-box;}
+    #printSheet .ps-row{display:flex; gap:10px; margin-bottom:10px;}
+    #printSheet .ps-field{flex:1;}
+    #printSheet .ps-field label{
+      display:block; font-size:9px; font-weight:bold; margin-bottom:2px;
+    }
+    #printSheet .ps-box{
+      border:1px solid #000; border-radius:4px; padding:5px 7px;
+      font-size:12px; min-height:20px; background:#fff;
+    }
+    #printSheet .ps-bar{
+      background:#000; color:#fff; font-weight:bold; text-align:center;
+      padding:5px 0; font-size:13px; margin: 12px 0 8px; border-radius:2px;
+    }
+    #printSheet table{width:100%; border-collapse:collapse; font-size:10px;}
+    #printSheet th{
+      background:#000; color:#fff; padding:4px 5px; font-size:9px; text-align:left;
+    }
+    #printSheet td{border:1px solid #999; padding:4px 5px; vertical-align:middle;}
+    #printSheet td.ps-label{font-weight:bold; background:#f0f0f0;}
+    #printSheet .ps-2col{display:flex; gap:14px;}
+    #printSheet .ps-2col > div{flex:1;}
+    #printSheet .ps-check{display:inline-block; width:11px; height:11px; border:1px solid #000; margin-right:3px;}
+    #printSheet .ps-inv-grid{display:grid; grid-template-columns: repeat(5, 1fr); gap:6px;}
+    #printSheet .ps-inv-slot{border:1px solid #999; border-radius:3px; height:22px; font-size:9px; padding:3px 6px;}
+    #printSheet .ps-small{font-size:9px; color:#333;}
+  </style>
+
+  <div class="ps-row">
+    <div class="ps-field"><label>Nome do Personagem</label><div class="ps-box" id="ps_nome"></div></div>
+    <div class="ps-field"><label>Arquétipo</label><div class="ps-box" id="ps_arquetipo"></div></div>
+    <div class="ps-field"><label>Função</label><div class="ps-box" id="ps_funcao"></div></div>
+    <div class="ps-field"><label>Level</label><div class="ps-box" id="ps_nivel"></div></div>
+    <div class="ps-field"><label>Persona</label><div class="ps-box" id="ps_persona"></div></div>
+    <div class="ps-field"><label>Arcano</label><div class="ps-box" id="ps_arcano"></div></div>
+  </div>
+  <div class="ps-row">
+    <div class="ps-field"><label>Tamanho</label><div class="ps-box" id="ps_tamanho"></div></div>
+    <div class="ps-field"><label>Idade</label><div class="ps-box" id="ps_idade"></div></div>
+    <div class="ps-field"><label>Gênero</label><div class="ps-box" id="ps_genero"></div></div>
+    <div class="ps-field"><label>Altura</label><div class="ps-box" id="ps_altura"></div></div>
+    <div class="ps-field"><label>Peso</label><div class="ps-box" id="ps_peso"></div></div>
+    <div class="ps-field"><label>Curso</label><div class="ps-box" id="ps_curso"></div></div>
+    <div class="ps-field"><label>XP Total</label><div class="ps-box" id="ps_xp"></div></div>
+  </div>
+
+  <div class="ps-2col">
+    <div>
+      <div class="ps-bar">Pontos de Vida</div>
+      <div class="ps-row">
+        <div class="ps-field"><label>PV Máximos</label><div class="ps-box" id="ps_pv"></div></div>
+        <div class="ps-field"><label>Sangramento</label><div class="ps-box" id="ps_sangramento"></div></div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field"><label>Valor de Pulso de Cura</label><div class="ps-box" id="ps_pulsos"></div></div>
+        <div class="ps-field"><label>Pulsos por Dia</label><div class="ps-box" id="ps_pulsosPorDia"></div></div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field"><label>Pontos de Vida Atuais</label><div class="ps-box" id="ps_pvAtuais"></div></div>
+        <div class="ps-field"><label>Pontos de Vida Temporários</label><div class="ps-box" id="ps_pvTemp"></div></div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field"><label>Valor de Pulso Bônus</label><div class="ps-box" id="ps_pulsoBonus"></div></div>
+        <div class="ps-field"><label>Pulsos Atuais</label><div class="ps-box" id="ps_pulsosAtuais"></div></div>
+      </div>
+      <div class="ps-small" style="margin-top:4px;"><b>Passiva:</b> <span id="ps_passiva"></span></div>
+      <div class="ps-row" style="margin-top:8px;">
+        <div class="ps-field">
+          <label>Falhas em Salvamento de Morte</label>
+          <div><span class="ps-check" id="ps_falha1"></span><span class="ps-check" id="ps_falha2"></span><span class="ps-check" id="ps_falha3"></span></div>
+        </div>
+      </div>
+      <div class="ps-row" style="margin-top:8px;">
+        <div class="ps-field"><label>Falhas Fatais</label><div class="ps-box" id="ps_falhasFatais" style="min-height:34px;"></div></div>
+      </div>
+      <div class="ps-row" style="margin-top:8px;">
+        <div class="ps-field"><label>Modificadores de Resistência</label><div class="ps-box" id="ps_modResistencia" style="min-height:34px;"></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="ps-bar">Defesas</div>
+      <table>
+        <tr><th>Pontuação</th><th></th><th>Atributo</th><th>Arq.</th><th>Armadura</th><th>Talentos</th><th>Enc.</th><th>Misc</th></tr>
+        <tr><td id="ps_ca"></td><td class="ps-label">CA</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td id="ps_fort"></td><td class="ps-label">Fortitude</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td id="ps_reflex"></td><td class="ps-label">Reflexos</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td id="ps_vontade"></td><td class="ps-label">Vontade</td><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <div class="ps-bar">Iniciativa</div>
+      <table>
+        <tr><th>Pontuação</th><th>Destreza + 1/2 Nível</th><th>Especial</th><th>Item</th><th>Misc</th></tr>
+        <tr><td id="ps_iniciativa"></td><td id="ps_ini_dex"></td><td></td><td></td><td></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="ps-bar">Habilidades</div>
+  <table>
+    <tr><th>Pontuação</th><th>Habilidade</th><th>Mod</th><th>Mod + 1/2 Nível</th></tr>
+    <tr><td id="ps_h_for"></td><td class="ps-label">Força</td><td id="ps_hm_for"></td><td id="ps_hh_for"></td></tr>
+    <tr><td id="ps_h_con"></td><td class="ps-label">Constituição</td><td id="ps_hm_con"></td><td id="ps_hh_con"></td></tr>
+    <tr><td id="ps_h_des"></td><td class="ps-label">Destreza</td><td id="ps_hm_des"></td><td id="ps_hh_des"></td></tr>
+    <tr><td id="ps_h_int"></td><td class="ps-label">Inteligência</td><td id="ps_hm_int"></td><td id="ps_hh_int"></td></tr>
+    <tr><td id="ps_h_sab"></td><td class="ps-label">Sabedoria</td><td id="ps_hm_sab"></td><td id="ps_hh_sab"></td></tr>
+    <tr><td id="ps_h_car"></td><td class="ps-label">Carisma</td><td id="ps_hm_car"></td><td id="ps_hh_car"></td></tr>
+  </table>
+
+  <div class="ps-bar">Sentidos</div>
+  <table>
+    <tr><th>Pontuação</th><th>Sentido Passivo</th><th>Bônus de Perícia</th></tr>
+    <tr><td id="ps_intuicaoPassivo"></td><td class="ps-label">Intuição</td><td></td></tr>
+    <tr><td id="ps_percepcaoPassivo"></td><td class="ps-label">Percepção</td><td id="ps_percepcaoBonus"></td></tr>
+  </table>
+  <div class="ps-row" style="margin-top:6px;">
+    <div class="ps-field"><label>Sentidos Especiais</label><div class="ps-box" id="ps_sentidosEspeciais" style="min-height:26px;"></div></div>
+  </div>
+
+  <div class="ps-bar">Movimento</div>
+  <table id="ps_movimento_table">
+    <tr><th>Pontuação</th><th></th><th>Armadura</th><th>Item</th><th>Misc</th></tr>
+  </table>
+  <div class="ps-row" style="margin-top:6px;">
+    <div class="ps-field"><label>Movimento Especial</label><div class="ps-box" id="ps_movimentoEspecial" style="min-height:26px;"></div></div>
+  </div>
+
+  <div class="ps-bar">Perícias</div>
+  <table id="ps_pericias_table">
+    <tr><th>Bônus</th><th>Nome da Perícia</th><th>Treinado</th><th>Misc</th></tr>
+  </table>
+
+  <div class="ps-bar">Base Persona</div>
+  <div class="ps-row">
+    <div class="ps-field"><label>Elemento</label><div class="ps-box" id="ps_elemento"></div></div>
+    <div class="ps-field"><label>Role</label><div class="ps-box" id="ps_role"></div></div>
+    <div class="ps-field"><label>Arma</label><div class="ps-box" id="ps_arma"></div></div>
+  </div>
+  <div class="ps-small" id="ps_role_desc" style="margin-bottom:8px;"></div>
+
+  <div class="ps-bar">Poderes de Persona</div>
+  <div id="ps_poderes" style="font-size:10px; line-height:1.5;"></div>
+
+  <div class="ps-bar">Talentos</div>
+  <table id="ps_talentos_table">
+    <tr><th>Nome do Talento</th><th>Level</th><th>Pré-requisitos</th><th>Nível Mínimo</th><th>Descrição / Efeito</th></tr>
+  </table>
+
+  <div class="ps-bar">Inventário (10 Slots)</div>
+  <div class="ps-inv-grid" id="ps_inventario"></div>
+  <div class="ps-small" style="margin-top:8px; white-space:pre-wrap;" id="ps_notas"></div>
+</div>
+
+<script>
+// ---------- DADOS ----------
+const ATTRS = [
+  {key:'for', label:'Força'},
+  {key:'con', label:'Constituição'},
+  {key:'des', label:'Destreza'},
+  {key:'int', label:'Inteligência'},
+  {key:'sab', label:'Sabedoria'},
+  {key:'car', label:'Carisma'}
+];
+
+const COST = {10:0,11:1,12:2,13:3,14:5,15:7,16:9,17:12,18:16};
+const MAX_POINTS = 28;
+const MIN_SCORE = 10, MAX_SCORE = 18;
+
+const attrState = {};
+ATTRS.forEach(a => attrState[a.key] = 10);
+
+function mod(score){ return Math.floor((score-10)/2); }
+function modStr(score){ const m = mod(score); return (m>=0?'+':'') + m; }
+
+const FUNCOES = {
+  tanque: {
+    pvBase: 18, pulsoBase: 8,
+    defesas: {fort:2, ca:1},
+    passiva: 'Corpo Fechado — Resistência Física 2'
+  },
+  dps: {
+    pvBase: 14, pulsoBase: 6,
+    defesas: {reflex:2},
+    passiva: 'Golpe Preciso — +1 ataque c/ arma branca, +2 dano físico base'
+  },
+  mago: {
+    pvBase: 12, pulsoBase: 5,
+    defesas: {vontade:2},
+    passiva: 'Sintonia de SP — +1 uso/Encontro de habilidade de Persona; pode usar atributo mental na Iniciativa'
+  }
+};
+
+const ARMAS = {
+  leve: {label:'Lâminas Leves', bonus:'+3', dano:'1d6 ou 1d8', attr:'FOR ou DEX', prop:'Ágil'},
+  pesada: {label:'Lâminas Pesadas', bonus:'+2', dano:'1d10 ou 1d12', attr:'FOR', prop:'2 mãos, ou +1 dano se usada c/ duas mãos'},
+  impacto: {label:'Impacto/Haste', bonus:'+2', dano:'1d10', attr:'FOR', prop:'Alcance (2 quadrados)'},
+  distancia: {label:'Distância', bonus:'+2', dano:'1d8', attr:'DEX', prop:'Alcance longo (10/20 quadrados)'}
+};
+
+const PERICIAS = ['Acrobacias','Arcanismo','Atletismo','Ofício','Diplomacia','Enganação','Cura','História','Investigação','Intimidação','Natureza','Percepção','Religião','Ocultismo','Furtividade','Sobrevivência','Tecnologia'];
+
+const PODERES = {
+  guardiao: {
+    atwill: [
+      {nome:'Golpe Desafiador', desc:'Acerto (1[Dado]+Atr. de dano). Alvo Marcado até fim do seu próximo turno.'},
+      {nome:'Barreira de Impacto', desc:'Acerto (1[Dado]+Atr. de dano). Você ganha +2 na CA até o início do seu próximo turno.'}
+    ],
+    encounter: [
+      {nome:'Puxão Magnético', desc:'(Explosão Contígua 3) Acerto (2[Dado]+Atr.) em todos na área. Puxa 2 quadrados e Marca.'},
+      {nome:'Esmagamento Debilitante', desc:'(Alvo Único) Acerto (2[Dado]+Atr.). Alvo sofre -2 ataque/dano até fim do seu próximo turno.'}
+    ],
+    daily: [
+      {nome:'Vanguarda Inabalável', desc:'Acerto (3[Dado]+Atr.). Metade do dano se errar. Ganha Resistência 5 a todo dano até fim do combate.'},
+      {nome:'Aprisionamento Absoluto', desc:'Acerto (3[Dado]+Atr.). Alvo Imobilizado (Salvação Encerra). Se errar, metade do dano e alvo fica Lento.'}
+    ]
+  },
+  algoz: {
+    atwill: [
+      {nome:'Investida Ágil', desc:'Acerto (1[Dado]+Atr.). Move 2 quadrados sem ataque de oportunidade antes/depois do golpe.'},
+      {nome:'Foco Fatal', desc:'Acerto (1[Dado]+Atr.). Se nenhum outro inimigo adjacente, role dano 2x e fique com o maior.'}
+    ],
+    encounter: [
+      {nome:'Golpe Duplo', desc:'Dois ataques no mesmo alvo. Acerto (1[Dado]+Atr.) por acerto.'},
+      {nome:'Ruptura de Defesa', desc:'Acerto (2[Dado]+Atr.). Ignora Resistência a dano do alvo.'}
+    ],
+    daily: [
+      {nome:'Execução Implacável', desc:'Acerto (4[Dado]+Atr.). Se errar, metade do dano.'},
+      {nome:'Marca da Morte', desc:'Acerto (3[Dado]+Atr.). Alvo sofre 5 de Dano Contínuo (Salvação Encerra).'}
+    ]
+  },
+  guia: {
+    atwill: [
+      {nome:'Orientação Tática', desc:'Acerto (1[Dado]+Atr.). Aliado a 5 quadrados ganha +2 no próximo ataque contra o mesmo alvo.'},
+      {nome:'Passo Coordenado', desc:'Acerto (1[Dado]+Atr.). Aliado a 5 quadrados faz Ajuste de 1 quadrado (Ação Livre).'}
+    ],
+    encounter: [
+      {nome:'Eco Revigorante', desc:'(Explosão 3) Acerto (2[Dado]+Atr.) em inimigos. Aliados na área ganham 5 PV Temp.'},
+      {nome:'Comando de Reação', desc:'Acerto (2[Dado]+Atr.). Aliado a 5 quadrados faz Ataque Básico imediato (Ação Livre).'}
+    ],
+    daily: [
+      {nome:'Zona de Proteção', desc:'(Área 2) Acerto (3[Dado]+Atr.) nos inimigos. Zona até fim do encontro: aliados +2 Defesas.'},
+      {nome:'Renascimento Triunfal', desc:'Acerto (3[Dado]+Atr.). Aliado caído a 10 quadrados gasta Pulso de Cura e levanta (Ação Livre).'}
+    ]
+  },
+  dominador: {
+    atwill: [
+      {nome:'Onda de Retenção', desc:'(Explosão Contígua 1) Acerto (1[Dado]+Atr.) em adjacentes. Alvos Lentos até início do seu próximo turno.'},
+      {nome:'Projeção de Força', desc:'(Ranged 10) Acerto (1[Dado]+Atr.). Desliza o alvo até 2 quadrados.'}
+    ],
+    encounter: [
+      {nome:'Explosão Repulsiva', desc:'(Área 2) Acerto (2[Dado]+Atr.) na área. Empurra 2 quadrados para longe do centro.'},
+      {nome:'Campo de Isolamento', desc:'Acerto (2[Dado]+Atr.). Se alvo se mover voluntariamente, sofre +1[Dado]+Atr. de dano.'}
+    ],
+    daily: [
+      {nome:'Tempestade Opressora', desc:'(Área 3) Acerto (3[Dado]+Atr.). Alvos Cegos (Salvação Encerra). Metade do dano se errar.'},
+      {nome:'Vórtice de Gravidade', desc:'(Área 2) Acerto (3[Dado]+Atr.). Puxa para o centro; alvos caem e ficam Atordoados até fim do seu próximo turno.'}
+    ]
+  }
+};
+
+// ---------- RENDER ATTR GRID ----------
+const attrGrid = document.getElementById('attrGrid');
+ATTRS.forEach(a => {
+  const block = document.createElement('div');
+  block.className = 'attr-block';
+  block.innerHTML = `
+    <h4>${a.label}</h4>
+    <div class="attr-controls">
+      <button onclick="changeAttr('${a.key}', -1)">−</button>
+      <div class="attr-val" id="val_${a.key}">10</div>
+      <button onclick="changeAttr('${a.key}', 1)">+</button>
+    </div>
+    <div class="attr-mod" id="mod_${a.key}">Mod +0</div>
+  `;
+  attrGrid.appendChild(block);
+});
+
+function changeAttr(key, dir){
+  let newVal = attrState[key] + dir;
+  if(newVal < MIN_SCORE || newVal > MAX_SCORE) return;
+  const currentCost = pointsUsedTotal();
+  const delta = COST[newVal] - COST[attrState[key]];
+  if(dir > 0 && currentCost + delta > MAX_POINTS) return;
+  attrState[key] = newVal;
+  renderAttrs();
+}
+
+function pointsUsedTotal(){
+  return ATTRS.reduce((sum,a) => sum + COST[attrState[a.key]], 0);
+}
+
+function renderAttrs(){
+  ATTRS.forEach(a => {
+    document.getElementById('val_'+a.key).textContent = attrState[a.key];
+    document.getElementById('mod_'+a.key).textContent = 'Mod ' + modStr(attrState[a.key]);
+  });
+  const used = pointsUsedTotal();
+  document.getElementById('pointsUsed').textContent = used;
+  document.getElementById('pointsTracker').classList.toggle('over', used > MAX_POINTS);
+  recalcAll();
+}
+
+// ---------- PERICIAS ----------
+const periciaList = document.getElementById('periciaList');
+const periciaChecks = {};
+PERICIAS.forEach(p => {
+  const row = document.createElement('div');
+  row.className = 'pericia-row';
+  const id = 'per_' + p.replace(/\s/g,'');
+  row.innerHTML = `
+    <input type="checkbox" id="${id}">
+    <span class="pericia-name">${p}</span>
+    <span class="pericia-bonus" id="bonus_${id}">+0</span>
+  `;
+  periciaList.appendChild(row);
+  periciaChecks[id] = false;
+});
+
+periciaList.addEventListener('change', (e) => {
+  if(e.target.type !== 'checkbox') return;
+  const selected = PERICIAS.filter(p => document.getElementById('per_'+p.replace(/\s/g,'')).checked);
+  if(selected.length > 3){
+    e.target.checked = false;
+    return;
+  }
+  updatePericias();
+});
+
+function updatePericias(){
+  let count = 0;
+  PERICIAS.forEach(p => {
+    const id = 'per_' + p.replace(/\s/g,'');
+    const checked = document.getElementById(id).checked;
+    if(checked) count++;
+    const bonusEl = document.getElementById('bonus_'+id);
+    bonusEl.textContent = checked ? '+5' : '+0';
+    bonusEl.classList.toggle('active', checked);
+  });
+  document.getElementById('periciaSelectedCount').textContent = `Selecionadas: ${count} / 3`;
+}
+
+// ---------- PODERES ----------
+const poderesContainer = document.getElementById('poderesContainer');
+function renderPoderes(){
+  const roleKey = document.getElementById('role').value;
+  const data = PODERES[roleKey];
+  poderesContainer.innerHTML = '';
+  const tiers = [
+    {key:'atwill', label:'Sem Limite (escolha 2)', max:2},
+    {key:'encounter', label:'Por Encontro (escolha 1)', max:1},
+    {key:'daily', label:'Diário (escolha 1)', max:1}
+  ];
+  tiers.forEach(tier => {
+    const wrap = document.createElement('div');
+    wrap.className = 'poder-tier';
+    wrap.innerHTML = `<h5>${tier.label}</h5>`;
+    data[tier.key].forEach((poder, i) => {
+      const id = `poder_${roleKey}_${tier.key}_${i}`;
+      const item = document.createElement('div');
+      item.className = 'poder-item';
+      item.innerHTML = `
+        <input type="checkbox" name="${roleKey}_${tier.key}" id="${id}">
+        <label for="${id}"><b>${poder.nome}</b> — ${poder.desc}</label>
+      `;
+      wrap.appendChild(item);
+    });
+    poderesContainer.appendChild(wrap);
+  });
+
+  poderesContainer.querySelectorAll('input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', () => enforceTierLimit(roleKey));
+  });
+}
+
+function enforceTierLimit(roleKey){
+  const tiers = [{key:'atwill', max:2},{key:'encounter', max:1},{key:'daily', max:1}];
+  tiers.forEach(tier => {
+    const boxes = poderesContainer.querySelectorAll(`input[name="${roleKey}_${tier.key}"]`);
+    const checked = Array.from(boxes).filter(b => b.checked);
+    if(checked.length > tier.max){
+      checked[0].checked = false;
+    }
+  });
+}
+
+document.getElementById('role').addEventListener('change', () => {
+  renderPoderes();
+  recalcAll();
+});
+
+// ---------- RECALC ----------
+function recalcAll(){
+  const funcaoKey = document.getElementById('funcao').value;
+  const funcao = FUNCOES[funcaoKey];
+  const conMod = mod(attrState.con);
+  const desMod = mod(attrState.des);
+  const sabMod = mod(attrState.sab);
+
+  document.getElementById('pvInicial').textContent = funcao.pvBase + conMod;
+  document.getElementById('pulsos').textContent = funcao.pulsoBase + conMod;
+  document.getElementById('passiva').textContent = funcao.passiva;
+
+  const def = funcao.defesas || {};
+  document.getElementById('ca').textContent = 10 + desMod + (def.ca||0);
+  document.getElementById('fort').textContent = 10 + conMod + (def.fort||0);
+  document.getElementById('reflex').textContent = 10 + desMod + (def.reflex||0);
+  document.getElementById('vontade').textContent = 10 + sabMod + (def.vontade||0);
+
+  const arma = ARMAS[document.getElementById('arma').value];
+  document.querySelector('#funcao').closest('.card-body'); // no-op keep structure
+
+  const roleKey = document.getElementById('role').value;
+  const roleNames = {guardiao:'Guardião (Defender)', algoz:'Algoz (Striker)', guia:'Guia (Leader)', dominador:'Dominador (Controller)'};
+  const roleDescs = {
+    guardiao:'Marcar 1 inimigo (Ação Menor, -2 ataque contra aliados). Retaliação básica se o marcado atacar aliado.',
+    algoz:'1x/turno ao acertar, +1d6 de dano elemental do seu tipo.',
+    guia:'2x/encontro (Ação Menor): aliado a 5 quadrados gasta Pulso de Cura e recupera +1d6 PV extras.',
+    dominador:'Ao acertar com magia, empurra 1 quadrado ou aplica Lentidão até fim do próximo turno do inimigo.'
+  };
+  document.getElementById('roleSummary').innerHTML = `<b>${roleNames[roleKey]}</b> — ${roleDescs[roleKey]}<br><b>Arma:</b> ${arma.label} (${arma.bonus} acerto, ${arma.dano}, ${arma.attr}) — ${arma.prop}`;
+  if(typeof saveState === 'function') saveState();
+}
+
+document.getElementById('funcao').addEventListener('change', recalcAll);
+document.getElementById('arma').addEventListener('change', recalcAll);
+
+// ---------- MOVIMENTOS (lista aberta) ----------
+let movimentos = [{id:1, nome:'Velocidade', base:'9 metros', armadura:'', item:'', misc:''}];
+let movCounter = 1;
+
+function renderMovimentos(){
+  const container = document.getElementById('movimentosContainer');
+  container.innerHTML = '';
+  movimentos.forEach(m => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex; gap:8px; align-items:flex-end; margin-bottom:10px;';
+    row.innerHTML = `
+      <div style="flex:1.2;"><label>Nome</label><input type="text" value="${m.nome}" oninput="updateMovimento(${m.id},'nome',this.value)"></div>
+      <div style="flex:1;"><label>Base</label><input type="text" value="${m.base}" oninput="updateMovimento(${m.id},'base',this.value)"></div>
+      <div style="flex:1;"><label>Armadura</label><input type="text" value="${m.armadura}" oninput="updateMovimento(${m.id},'armadura',this.value)"></div>
+      <div style="flex:1;"><label>Item</label><input type="text" value="${m.item}" oninput="updateMovimento(${m.id},'item',this.value)"></div>
+      <div style="flex:1;"><label>Misc</label><input type="text" value="${m.misc}" oninput="updateMovimento(${m.id},'misc',this.value)"></div>
+      <button class="btn" type="button" style="padding:8px 10px; font-size:.8rem;" onclick="removeMovimento(${m.id})">✕</button>
+    `;
+    container.appendChild(row);
+  });
+}
+
+function addMovimento(){
+  movCounter++;
+  movimentos.push({id: movCounter, nome:'', base:'', armadura:'', item:'', misc:''});
+  renderMovimentos();
+  saveState();
+}
+
+function removeMovimento(id){
+  if(movimentos.length <= 1) return;
+  movimentos = movimentos.filter(m => m.id !== id);
+  renderMovimentos();
+  saveState();
+}
+
+function updateMovimento(id, field, value){
+  const m = movimentos.find(x => x.id === id);
+  if(m) m[field] = value;
+  saveState();
+}
+
+// ---------- SALVAMENTO LOCAL (localStorage) ----------
+const STORAGE_KEY = 'personaFicha_v1';
+
+function saveState(){
+  try{
+    const state = {};
+    document.querySelectorAll('input[id], textarea[id], select[id]').forEach(el => {
+      if(el.type === 'checkbox') state[el.id] = el.checked;
+      else state[el.id] = el.value;
+    });
+    state.__attrState = attrState;
+    state.__movimentos = movimentos;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }catch(e){
+    console.warn('Não foi possível salvar localmente:', e);
+  }
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const state = JSON.parse(raw);
+
+    if(state.__attrState) Object.assign(attrState, state.__attrState);
+    if(state.__movimentos && state.__movimentos.length){
+      movimentos = state.__movimentos;
+      movCounter = Math.max(...movimentos.map(m => m.id), 0);
+    }
+
+    // restaura selects que afetam a geração de outros elementos primeiro
+    ['funcao','arma','elemento','role'].forEach(id => {
+      if(state[id] !== undefined && document.getElementById(id)) document.getElementById(id).value = state[id];
+    });
+
+    renderAttrs();
+    renderPoderes();
+    renderMovimentos();
+
+    // restaura todo o resto (inclusive checkboxes de perícias e poderes, já existentes no DOM)
+    Object.keys(state).forEach(id => {
+      if(id.startsWith('__')) return;
+      const el = document.getElementById(id);
+      if(!el) return;
+      if(el.type === 'checkbox') el.checked = state[id];
+      else el.value = state[id];
+    });
+
+    updatePericias();
+    recalcAll();
+  }catch(e){
+    console.warn('Não foi possível carregar dados salvos:', e);
+  }
+}
+
+// salva automaticamente a cada alteração (com pequeno atraso)
+let saveTimeout;
+document.addEventListener('input', () => { clearTimeout(saveTimeout); saveTimeout = setTimeout(saveState, 400); });
+document.addEventListener('change', () => { clearTimeout(saveTimeout); saveTimeout = setTimeout(saveState, 400); });
+
+// ---------- RESET ----------
+function resetSheet(){
+  if(!confirm('Limpar toda a ficha?')) return;
+  document.querySelectorAll('input[type=text], input[type=number], textarea').forEach(el => el.value = '');
+  document.getElementById('nivel').value = 1;
+  document.getElementById('xp').value = 0;
+  ATTRS.forEach(a => attrState[a.key] = 10);
+  document.querySelectorAll('.pericia-row input[type=checkbox]').forEach(cb => cb.checked = false);
+  ['falha1','falha2','falha3'].forEach(id => document.getElementById(id).checked = false);
+  document.getElementById('funcao').selectedIndex = 0;
+  document.getElementById('arma').selectedIndex = 0;
+  document.getElementById('elemento').selectedIndex = 0;
+  document.getElementById('role').selectedIndex = 0;
+  movimentos = [{id:1, nome:'Velocidade', base:'9 metros', armadura:'', item:'', misc:''}];
+  movCounter = 1;
+  renderAttrs();
+  updatePericias();
+  renderPoderes();
+  renderMovimentos();
+  recalcAll();
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+// ---------- EXPORT ----------
+const FUNCAO_LABEL = {tanque:'Tanque', dps:'DPS / Atacante', mago:'Usuário Mágico'};
+const ELEMENTO_LABEL = {fogo:'Fogo (Agi)', gelo:'Gelo (Bufu)', trovao:'Trovão (Zio)', vento:'Vento (Garu)', agua:'Água (Aqua)', nuclear:'Nuclear (Frei)', luz:'Luz (Kouha)', escuridao:'Escuridão (Eiha)'};
+const ROLE_LABEL = {guardiao:'Guardião (Defender)', algoz:'Algoz (Striker)', guia:'Guia (Leader)', dominador:'Dominador (Controller)'};
+
+function val(id){ return document.getElementById(id).value || ''; }
+function txt(id){ return document.getElementById(id).textContent || ''; }
+
+function fillPrintSheet(){
+  document.getElementById('ps_nome').textContent = val('nome');
+  document.getElementById('ps_arquetipo').textContent = val('arquetipo');
+  document.getElementById('ps_funcao').textContent = FUNCAO_LABEL[document.getElementById('funcao').value];
+  document.getElementById('ps_nivel').textContent = val('nivel');
+  document.getElementById('ps_persona').textContent = val('persona');
+  document.getElementById('ps_arcano').textContent = val('arcano');
+  document.getElementById('ps_tamanho').textContent = val('tamanho');
+  document.getElementById('ps_idade').textContent = val('idade');
+  document.getElementById('ps_genero').textContent = val('genero');
+  document.getElementById('ps_altura').textContent = val('altura');
+  document.getElementById('ps_peso').textContent = val('peso');
+  document.getElementById('ps_curso').textContent = val('curso');
+  document.getElementById('ps_xp').textContent = val('xp');
+
+  document.getElementById('ps_pv').textContent = txt('pvInicial');
+  document.getElementById('ps_pulsos').textContent = txt('pulsos');
+  document.getElementById('ps_passiva').textContent = txt('passiva');
+  document.getElementById('ps_sangramento').textContent = val('sangramento');
+  document.getElementById('ps_pulsosPorDia').textContent = val('pulsosPorDia');
+  document.getElementById('ps_pvAtuais').textContent = val('pvAtuais');
+  document.getElementById('ps_pvTemp').textContent = val('pvTemp');
+  document.getElementById('ps_pulsoBonus').textContent = val('pulsoBonus');
+  document.getElementById('ps_pulsosAtuais').textContent = val('pulsosAtuais');
+  document.getElementById('ps_falhasFatais').textContent = val('falhasFatais');
+  document.getElementById('ps_modResistencia').textContent = val('modResistencia');
+  ['falha1','falha2','falha3'].forEach(id => {
+    document.getElementById('ps_'+id).textContent = document.getElementById(id).checked ? '☑' : '';
+  });
+
+  document.getElementById('ps_ca').textContent = txt('ca');
+  document.getElementById('ps_fort').textContent = txt('fort');
+  document.getElementById('ps_reflex').textContent = txt('reflex');
+  document.getElementById('ps_vontade').textContent = txt('vontade');
+
+  const nivel = parseInt(val('nivel')) || 1;
+  const desMod = mod(attrState.des);
+  const halfNivel = Math.floor(nivel/2);
+  document.getElementById('ps_iniciativa').textContent = desMod + halfNivel;
+  document.getElementById('ps_ini_dex').textContent = `${modStr(attrState.des)} + ${halfNivel}`;
+
+  ATTRS.forEach(a => {
+    const score = attrState[a.key];
+    document.getElementById('ps_h_'+a.key).textContent = score;
+    document.getElementById('ps_hm_'+a.key).textContent = modStr(score);
+    document.getElementById('ps_hh_'+a.key).textContent = (mod(score)+halfNivel >= 0 ? '+':'') + (mod(score)+halfNivel);
+  });
+
+  // Perícias table
+  const periciaTable = document.getElementById('ps_pericias_table');
+  periciaTable.querySelectorAll('tr:not(:first-child)').forEach(tr => tr.remove());
+  let percepcaoBonus = '+0';
+  PERICIAS.forEach(p => {
+    const id = 'per_' + p.replace(/\s/g,'');
+    const checked = document.getElementById(id).checked;
+    if(p === 'Percepção' && checked) percepcaoBonus = '+5';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${checked ? '+5' : '+0'}</td><td class="ps-label">${p}</td><td style="text-align:center;">${checked ? '☑' : '☐'}</td><td></td>`;
+    periciaTable.appendChild(tr);
+  });
+
+  // Sentidos
+  document.getElementById('ps_intuicaoPassivo').textContent = val('intuicaoPassivo');
+  document.getElementById('ps_percepcaoPassivo').textContent = val('percepcaoPassivo');
+  document.getElementById('ps_percepcaoBonus').textContent = percepcaoBonus;
+  document.getElementById('ps_sentidosEspeciais').textContent = val('sentidosEspeciais');
+
+  // Movimento
+  const movTable = document.getElementById('ps_movimento_table');
+  movTable.querySelectorAll('tr:not(:first-child)').forEach(tr => tr.remove());
+  movimentos.forEach(m => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${m.base||''}</td><td class="ps-label">${m.nome||''}</td><td>${m.armadura||''}</td><td>${m.item||''}</td><td>${m.misc||''}</td>`;
+    movTable.appendChild(tr);
+  });
+  document.getElementById('ps_movimentoEspecial').textContent = val('movimentoEspecial');
+
+  // Talentos (Nome; Level; Pré-requisitos; Nível Mínimo; Descrição)
+  const talentosTable = document.getElementById('ps_talentos_table');
+  talentosTable.querySelectorAll('tr:not(:first-child)').forEach(tr => tr.remove());
+  const talentoLines = (val('talentosInput') || '').split('\n').map(l => l.trim()).filter(l => l !== '');
+  talentoLines.forEach(line => {
+    const parts = line.split(';').map(s => s.trim());
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${parts[0]||''}</td><td>${parts[1]||''}</td><td>${parts[2]||''}</td><td>${parts[3]||''}</td><td>${parts[4]||''}</td>`;
+    talentosTable.appendChild(tr);
+  });
+  if(talentoLines.length === 0){
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td></td><td></td><td></td><td></td><td></td>`;
+    talentosTable.appendChild(tr);
+  }
+
+  document.getElementById('ps_elemento').textContent = ELEMENTO_LABEL[document.getElementById('elemento').value];
+  document.getElementById('ps_role').textContent = ROLE_LABEL[document.getElementById('role').value];
+  const arma = ARMAS[document.getElementById('arma').value];
+  document.getElementById('ps_arma').textContent = `${arma.label} (${arma.bonus}, ${arma.dano}, ${arma.attr})`;
+  document.getElementById('ps_role_desc').textContent = document.getElementById('roleSummary').textContent;
+
+  // Poderes escolhidos
+  const roleKey = document.getElementById('role').value;
+  const poderesEl = document.getElementById('ps_poderes');
+  poderesEl.innerHTML = '';
+  const tiers = [{key:'atwill', label:'Sem Limite'},{key:'encounter', label:'Por Encontro'},{key:'daily', label:'Diário'}];
+  tiers.forEach(tier => {
+    const boxes = document.querySelectorAll(`input[name="${roleKey}_${tier.key}"]`);
+    const checked = Array.from(boxes).filter(b => b.checked);
+    if(checked.length === 0) return;
+    const line = document.createElement('div');
+    const nomes = checked.map(b => b.nextElementSibling.querySelector('b').textContent).join(', ');
+    line.innerHTML = `<b>${tier.label}:</b> ${nomes}`;
+    poderesEl.appendChild(line);
+  });
+  if(poderesEl.innerHTML === '') poderesEl.textContent = 'Nenhum poder selecionado ainda.';
+
+  // Inventário (10 slots a partir do texto, uma linha por slot)
+  const invLines = (val('inventario') || '').split('\n').filter(l => l.trim() !== '');
+  const invGrid = document.getElementById('ps_inventario');
+  invGrid.innerHTML = '';
+  for(let i=0; i<10; i++){
+    const slot = document.createElement('div');
+    slot.className = 'ps-inv-slot';
+    slot.textContent = invLines[i] || '';
+    invGrid.appendChild(slot);
+  }
+
+  document.getElementById('ps_notas').textContent = val('notas');
+}
+
+function exportPDF(){
+  fillPrintSheet();
+  const printEl = document.getElementById('printSheet');
+  const contentHTML = printEl.outerHTML;
+  const nome = document.getElementById('nome').value || 'Ficha';
+
+  const win = window.open('', '_blank');
+  if(!win){
+    alert('O navegador bloqueou a janela de exportação. Permita pop-ups para este site e tente de novo.');
+    return;
+  }
+  win.document.open();
+  win.document.write(`<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Ficha — ${nome}</title>
+<style>
+  html, body{ margin:0; padding:0; background:#fff; }
+  #printSheet{
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 794px;
+    margin: 0 auto;
+  }
+  @media print{
+    @page{ size: A4; margin: 10mm; }
+    #printSheet{ max-width: 100%; }
+  }
+</style>
+</head>
+<body>${contentHTML}</body>
+</html>`);
+  win.document.close();
+
+  const triggerPrint = () => { win.focus(); win.print(); };
+  if(win.document.readyState === 'complete'){
+    setTimeout(triggerPrint, 150);
+  } else {
+    win.onload = () => setTimeout(triggerPrint, 150);
+    setTimeout(triggerPrint, 500); // fallback caso onload não dispare
+  }
+}
+
+// ---------- INIT ----------
+renderAttrs();
+updatePericias();
+renderPoderes();
+renderMovimentos();
+recalcAll();
+loadState();
+</script>
+</body>
+</html>
