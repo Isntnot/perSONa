@@ -254,20 +254,36 @@
   <div class="card">
     <div class="card-head"><span class="card-num">I</span><span class="card-title">Identidade</span></div>
     <div class="card-body">
-      <div class="grid grid-4">
-        <div><label>Nome do Personagem</label><input type="text" id="nome"></div>
-        <div><label>Arquétipo</label><input type="text" id="arquetipo"></div>
+      <div class="grid grid-6">
+        <div><label>Nome</label><input type="text" id="nome"></div>
+        <div>
+          <label>Arquétipo</label>
+          <select id="funcao">
+            <option value="vigoroso">O Vigoroso</option>
+            <option value="preciso">O Preciso</option>
+            <option value="intuitivo">O Intuitivo</option>
+          </select>
+        </div>
+        <div>
+          <label>Função (Role)</label>
+          <select id="role">
+            <option value="guardiao">Guardião</option>
+            <option value="algoz">Algoz</option>
+            <option value="guia">Guia</option>
+            <option value="dominador">Dominador</option>
+          </select>
+        </div>
+        <div><label>Level</label><input type="number" id="nivel" value="1" min="1"></div>
         <div><label>Persona (nome)</label><input type="text" id="persona"></div>
         <div><label>Arcano</label><input type="text" id="arcano"></div>
       </div>
       <div class="grid grid-4" style="margin-top:14px;">
-        <div><label>Level</label><input type="number" id="nivel" value="1" min="1"></div>
         <div><label>Tamanho</label><input type="text" id="tamanho" value="Médio"></div>
         <div><label>Idade</label><input type="text" id="idade"></div>
         <div><label>Gênero</label><input type="text" id="genero"></div>
-      </div>
-      <div class="grid grid-4" style="margin-top:14px;">
         <div><label>Altura</label><input type="text" id="altura"></div>
+      </div>
+      <div class="grid grid-3" style="margin-top:14px;">
         <div><label>Peso</label><input type="text" id="peso"></div>
         <div><label>Curso</label><input type="text" id="curso"></div>
         <div><label>XP Total</label><input type="number" id="xp" value="0"></div>
@@ -279,40 +295,34 @@
   <div class="card">
     <div class="card-head"><span class="card-num">II</span><span class="card-title">Atributos — Compra por Pontos</span></div>
     <div class="card-body">
-      <div class="points-tracker" id="pointsTracker">Pontos usados: <span id="pointsUsed">0</span> / 28</div>
+      <div class="points-tracker" id="pointsTracker">
+        Pontos usados: <span id="pointsUsed">0</span> /
+        <input type="number" id="maxPoints" value="32" min="1" style="width:60px; display:inline-block; text-align:center; padding:4px; margin-left:4px;">
+        <button class="btn" type="button" style="padding:4px 10px; font-size:.75rem; margin-left:8px;" onclick="adjustMaxPoints(4)">+4</button>
+        <button class="btn" type="button" style="padding:4px 10px; font-size:.75rem;" onclick="adjustMaxPoints(-4)">−4</button>
+      </div>
       <div class="grid grid-6" id="attrGrid"></div>
-      <div class="hint">Custo: 11–14 = 1/2/3/5 pts · 15–18 = 7/9/12/16 pts (ajuste os custos no código se sua mesa usar outra tabela).</div>
+      <div class="hint">Faixa de atributos: 8 a 18 (todos começam em 8, Mod. −2) · Ajuste o total de pontos acima se precisar de mais margem.</div>
     </div>
   </div>
 
-  <!-- III. FUNÇÃO HUMANA -->
+  <!-- III. ARMA & RECURSOS -->
   <div class="card">
-    <div class="card-head"><span class="card-num">III</span><span class="card-title">Função Humana</span></div>
+    <div class="card-head"><span class="card-num">III</span><span class="card-title">Arma &amp; Passiva do Arquétipo</span></div>
     <div class="card-body">
       <div class="grid grid-2">
         <div>
-          <label>Função</label>
-          <select id="funcao">
-            <option value="tanque">Tanque (Foco Físico)</option>
-            <option value="dps">DPS / Atacante (Foco em Agilidade)</option>
-            <option value="mago">Usuário Mágico (Foco Mental)</option>
-          </select>
-        </div>
-        <div>
-          <label>Arma</label>
+          <label>Categoria de Arma</label>
           <select id="arma">
-            <option value="leve">Lâminas Leves — +3 acerto · 1d6/1d8 (FOR/DEX)</option>
-            <option value="pesada">Lâminas Pesadas — +2 acerto · 1d10/1d12 (FOR)</option>
-            <option value="impacto">Impacto/Haste — +2 acerto · 1d10 (FOR), alcance 2</option>
-            <option value="distancia">Distância — +2 acerto · 1d8 (DEX), alcance 10/20</option>
+            <option value="leve">Armas Leves — +3 acerto · 1d6/1d8 (DEX/FOR) — Precisão e Acuidade</option>
+            <option value="pesada">Armas Pesadas — +2 acerto · 1d10/1d12 (FOR) — Dano Bruto (duas mãos)</option>
+            <option value="haste">Armas de Haste — +2 acerto · 1d8/1d10 (FOR/DEX) — Alcance Estendido (2 sq)</option>
+            <option value="distancia">Distância — +2 acerto · 1d6/1d8 (DEX) — Ataques à Distância (10–20 sq)</option>
           </select>
         </div>
-      </div>
-      <div class="grid grid-3" style="margin-top:16px;">
-        <div><label>PV Inicial</label><div class="readout" id="pvInicial">—</div></div>
-        <div><label>Pulsos de Cura</label><div class="readout" id="pulsos">—</div></div>
         <div><label>Passiva</label><div class="readout" id="passiva" style="font-size:.75rem; font-weight:600;">—</div></div>
       </div>
+      <div class="hint" style="margin-top:16px;">Perícias sugeridas do Arquétipo (escolha 3 treinadas): <span id="periciasSugeridas"></span></div>
     </div>
   </div>
 
@@ -326,7 +336,7 @@
         <div><label>Reflexos</label><div class="readout" id="reflex">—</div></div>
         <div><label>Vontade</label><div class="readout" id="vontade">—</div></div>
       </div>
-      <div class="hint">CA = 10 + Mod. Destreza + bônus de Função · Fort = 10 + Mod. Constituição + bônus · Reflexos = 10 + Mod. Destreza + bônus · Vontade = 10 + Mod. Sabedoria + bônus.</div>
+      <div class="hint">CA = 10 + maior(Mod. DEX, Mod. INT) + bônus do Arquétipo · Fortitude = 10 + maior(Mod. FOR, Mod. CON) + bônus · Reflexos = 10 + maior(Mod. DEX, Mod. INT) + bônus · Vontade = 10 + maior(Mod. SAB, Mod. CAR) + bônus. Com armadura, a CA usa o bônus da armadura no lugar do maior(DEX,INT).</div>
     </div>
   </div>
 
@@ -335,10 +345,31 @@
     <div class="card-head"><span class="card-num">V</span><span class="card-title">Recursos de Combate</span></div>
     <div class="card-body">
       <div class="grid grid-4">
-        <div><label>Sangramento</label><input type="text" id="sangramento"></div>
-        <div><label>Pulsos por Dia</label><input type="text" id="pulsosPorDia"></div>
+        <div><label>PV Máximos</label><div class="readout" id="pvInicial">—</div></div>
+        <div><label>Valor do Pulso</label><div class="readout" id="pulsoValor">—</div></div>
+        <div><label>Pulsos de Cura / Dia</label><div class="readout" id="pulsos">—</div></div>
+        <div>
+          <label>Rolar Dado</label>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <select id="dadoTipo" style="flex:1;">
+              <option value="4">d4</option>
+              <option value="6">d6</option>
+              <option value="8">d8</option>
+              <option value="10">d10</option>
+              <option value="12">d12</option>
+              <option value="20" selected>d20</option>
+            </select>
+            <button class="btn" type="button" style="padding:9px 14px; font-size:1.1rem;" onclick="rolarDado()" title="Rolar dado">🎲</button>
+          </div>
+          <div class="readout" id="dadoResultado" style="margin-top:6px; font-size:1.3rem;">—</div>
+        </div>
+      </div>
+
+      <div class="grid grid-4" style="margin-top:14px;">
         <div><label>Pontos de Vida Atuais</label><input type="text" id="pvAtuais"></div>
         <div><label>Pontos de Vida Temporários</label><input type="text" id="pvTemp"></div>
+        <div><label>Sangrando? (≤ 50% PV Máx.)</label><div class="readout" id="sangrando" style="color:var(--bad);">—</div></div>
+        <div><label>Sangramento</label><input type="text" id="sangramento"></div>
       </div>
       <div class="grid grid-2" style="margin-top:14px;">
         <div><label>Valor de Pulso Bônus</label><input type="text" id="pulsoBonus"></div>
@@ -400,29 +431,18 @@
   <div class="card">
     <div class="card-head"><span class="card-num">VIII</span><span class="card-title">Base Persona</span></div>
     <div class="card-body">
-      <div class="grid grid-2">
-        <div>
-          <label>Elemento</label>
-          <select id="elemento">
-            <option value="fogo">Fogo (Agi) — Queimadura</option>
-            <option value="gelo">Gelo (Bufu) — Congelamento</option>
-            <option value="trovao">Trovão (Zio) — Paralisia</option>
-            <option value="vento">Vento (Garu) — Impacto</option>
-            <option value="agua">Água (Aqua) — Desequilíbrio</option>
-            <option value="nuclear">Nuclear (Frei) — Explosão</option>
-            <option value="luz">Luz (Kouha) — Cegueira</option>
-            <option value="escuridao">Escuridão (Eiha) — Dreno</option>
-          </select>
-        </div>
-        <div>
-          <label>Função Tática (Role)</label>
-          <select id="role">
-            <option value="guardiao">Guardião (Defender)</option>
-            <option value="algoz">Algoz (Striker)</option>
-            <option value="guia">Guia (Leader)</option>
-            <option value="dominador">Dominador (Controller)</option>
-          </select>
-        </div>
+      <div>
+        <label>Elemento</label>
+        <select id="elemento">
+          <option value="fogo">Fogo (Agi) — Queimadura</option>
+          <option value="gelo">Gelo (Bufu) — Congelamento</option>
+          <option value="trovao">Trovão (Zio) — Paralisia</option>
+          <option value="vento">Vento (Garu) — Impacto</option>
+          <option value="agua">Água (Aqua) — Desequilíbrio</option>
+          <option value="nuclear">Nuclear (Frei) — Explosão</option>
+          <option value="luz">Luz (Kouha) — Cegueira</option>
+          <option value="escuridao">Escuridão (Eiha) — Dreno</option>
+        </select>
       </div>
       <div class="role-summary" id="roleSummary"></div>
     </div>
@@ -441,8 +461,9 @@
   <div class="card">
     <div class="card-head"><span class="card-num">X</span><span class="card-title">Talentos</span></div>
     <div class="card-body">
-      <label>Um talento por linha, separado por ponto-e-vírgula: <i>Nome; Level; Pré-requisitos; Nível Mínimo; Descrição/Efeito</i></label>
-      <textarea id="talentosInput" placeholder="Golpe Rápido; 1; Destreza 14; 1; Ganha +1 em testes de iniciativa" style="min-height:100px;"></textarea>
+      <div class="hint" style="margin-bottom:10px;">Nível 1 dá 1 Talento; adicione mais linhas conforme o personagem sobe de nível.</div>
+      <div id="talentosContainer"></div>
+      <button class="btn" type="button" style="margin-top:6px; padding:7px 16px; font-size:.8rem;" onclick="addTalento()">+ Adicionar Talento</button>
     </div>
   </div>
 
@@ -528,18 +549,21 @@
       <div class="ps-bar">Pontos de Vida</div>
       <div class="ps-row">
         <div class="ps-field"><label>PV Máximos</label><div class="ps-box" id="ps_pv"></div></div>
-        <div class="ps-field"><label>Sangramento</label><div class="ps-box" id="ps_sangramento"></div></div>
+        <div class="ps-field"><label>Pulsos de Cura / Dia</label><div class="ps-box" id="ps_pulsos"></div></div>
       </div>
       <div class="ps-row">
-        <div class="ps-field"><label>Valor de Pulso de Cura</label><div class="ps-box" id="ps_pulsos"></div></div>
-        <div class="ps-field"><label>Pulsos por Dia</label><div class="ps-box" id="ps_pulsosPorDia"></div></div>
+        <div class="ps-field"><label>Valor do Pulso (25%)</label><div class="ps-box" id="ps_pulsoValor"></div></div>
+        <div class="ps-field"><label>Sangrando? (≤50%)</label><div class="ps-box" id="ps_sangrando"></div></div>
       </div>
       <div class="ps-row">
         <div class="ps-field"><label>Pontos de Vida Atuais</label><div class="ps-box" id="ps_pvAtuais"></div></div>
         <div class="ps-field"><label>Pontos de Vida Temporários</label><div class="ps-box" id="ps_pvTemp"></div></div>
       </div>
       <div class="ps-row">
+        <div class="ps-field"><label>Sangramento</label><div class="ps-box" id="ps_sangramento"></div></div>
         <div class="ps-field"><label>Valor de Pulso Bônus</label><div class="ps-box" id="ps_pulsoBonus"></div></div>
+      </div>
+      <div class="ps-row">
         <div class="ps-field"><label>Pulsos Atuais</label><div class="ps-box" id="ps_pulsosAtuais"></div></div>
       </div>
       <div class="ps-small" style="margin-top:4px;"><b>Passiva:</b> <span id="ps_passiva"></span></div>
@@ -596,7 +620,7 @@
 
   <div class="ps-bar">Movimento</div>
   <table id="ps_movimento_table">
-    <tr><th>Pontuação</th><th></th><th>Armadura</th><th>Item</th><th>Misc</th></tr>
+    <tr><th>Pontuação</th><th></th><th>Item</th><th>Misc</th></tr>
   </table>
   <div class="ps-row" style="margin-top:6px;">
     <div class="ps-field"><label>Movimento Especial</label><div class="ps-box" id="ps_movimentoEspecial" style="min-height:26px;"></div></div>
@@ -639,42 +663,161 @@ const ATTRS = [
   {key:'car', label:'Carisma'}
 ];
 
-const COST = {10:0,11:1,12:2,13:3,14:5,15:7,16:9,17:12,18:16};
-const MAX_POINTS = 28;
-const MIN_SCORE = 10, MAX_SCORE = 18;
+const COST = {8:0,9:1,10:2,11:3,12:4,13:5,14:7,15:9,16:11,17:14,18:18};
+let MAX_POINTS = 32;
+const MIN_SCORE = 8, MAX_SCORE = 18;
+
+function adjustMaxPoints(delta){
+  const input = document.getElementById('maxPoints');
+  MAX_POINTS = Math.max(1, (parseInt(input.value)||32) + delta);
+  input.value = MAX_POINTS;
+  renderAttrs();
+  saveState();
+}
+
+document.getElementById('maxPoints').addEventListener('input', () => {
+  MAX_POINTS = parseInt(document.getElementById('maxPoints').value) || 28;
+  renderAttrs();
+});
 
 const attrState = {};
-ATTRS.forEach(a => attrState[a.key] = 10);
+ATTRS.forEach(a => attrState[a.key] = 8);
 
 function mod(score){ return Math.floor((score-10)/2); }
 function modStr(score){ const m = mod(score); return (m>=0?'+':'') + m; }
 
 const FUNCOES = {
-  tanque: {
+  vigoroso: {
+    label: 'O Vigoroso',
     pvBase: 18, pulsoBase: 8,
     defesas: {fort:2, ca:1},
-    passiva: 'Corpo Fechado — Resistência Física 2'
+    passiva: 'Corpo Fechado — Resistência Física 2 (reduz 2 de dano de ataques puramente físicos)',
+    pericias: ['Atletismo','Intimidação','Manuseio Urbano','Exploração Subterrânea','Cura']
   },
-  dps: {
+  preciso: {
+    label: 'O Preciso',
     pvBase: 14, pulsoBase: 6,
     defesas: {reflex:2},
-    passiva: 'Golpe Preciso — +1 ataque c/ arma branca, +2 dano físico base'
+    passiva: 'Golpe Certeiro — +1 no ataque com armas brancas e +2 de dano extra passivo',
+    pericias: ['Acrobacia','Furtividade','Ladinagem','Enganação','Percepção','Tecnologia']
   },
-  mago: {
+  intuitivo: {
+    label: 'O Intuitivo',
     pvBase: 12, pulsoBase: 5,
     defesas: {vontade:2},
-    passiva: 'Sintonia de SP — +1 uso/Encontro de habilidade de Persona; pode usar atributo mental na Iniciativa'
+    passiva: 'Sintonia Psíquica — +1 uso extra/Encontro de habilidade de Persona; pode usar Atributo Mental para Iniciativa',
+    pericias: ['Arcanismo','Intuição','Diplomacia','História','Religião','Natureza','Tecnologia']
   }
 };
 
 const ARMAS = {
-  leve: {label:'Lâminas Leves', bonus:'+3', dano:'1d6 ou 1d8', attr:'FOR ou DEX', prop:'Ágil'},
-  pesada: {label:'Lâminas Pesadas', bonus:'+2', dano:'1d10 ou 1d12', attr:'FOR', prop:'2 mãos, ou +1 dano se usada c/ duas mãos'},
-  impacto: {label:'Impacto/Haste', bonus:'+2', dano:'1d10', attr:'FOR', prop:'Alcance (2 quadrados)'},
-  distancia: {label:'Distância', bonus:'+2', dano:'1d8', attr:'DEX', prop:'Alcance longo (10/20 quadrados)'}
+  leve: {label:'Armas Leves', bonus:'+3', dano:'1d6 ou 1d8', attr:'DEX ou FOR', prop:'Precisão e Acuidade (foco em acertar constantemente)'},
+  pesada: {label:'Armas Pesadas', bonus:'+2', dano:'1d10 ou 1d12', attr:'FOR', prop:'Dano Bruto (exige o uso de duas mãos)'},
+  haste: {label:'Armas de Haste', bonus:'+2', dano:'1d8 ou 1d10', attr:'FOR ou DEX', prop:'Alcance Estendido (ataca a 2 quadrados)'},
+  distancia: {label:'Distância', bonus:'+2', dano:'1d6 ou 1d8', attr:'DEX', prop:'Ataques à Distância (alcança 10 a 20 quadrados)'}
 };
 
-const PERICIAS = ['Acrobacias','Arcanismo','Atletismo','Ofício','Diplomacia','Enganação','Cura','História','Investigação','Intimidação','Natureza','Percepção','Religião','Ocultismo','Furtividade','Sobrevivência','Tecnologia'];
+const PERICIAS = ['Acrobacia','Arcanismo','Atletismo','Cura','Diplomacia','Enganação','Exploração Subterrânea','Furtividade','História','Intimidação','Intuição','Ladinagem','Manuseio Urbano','Natureza','Percepção','Religião','Tecnologia'];
+
+const TALENTOS = {
+  'Combate Físico e Mobilidade': [
+    {nome:'Apostador do Caos (Reckless Offense)', desc:'Sofrer −2 na CA até seu próximo turno para ganhar +2 no ataque.'},
+    {nome:'Ataque Poderoso (Power Attack)', desc:'Sofrer −2 no ataque com Armas Pesadas/Haste para dar +3 de dano bônus.'},
+    {nome:'Especialista em Armas Leves (Nimble Blade)', desc:'+1 no ataque com Armas Leves com Vantagem de Combate.'},
+    {nome:'Passo Ligeiro (Fleet of Foot)', desc:'Deslocamento base +1 quadrado.'},
+    {nome:'Prontidão de Combate (Improved Initiative)', desc:'+4 fixo na Iniciativa.'}
+  ],
+  'Role (Funções Táticas)': [
+    {nome:'Marca Opressora (Guardião)', desc:'Inimigos marcados tratam áreas adjacentes a você como Terreno Difícil.'},
+    {nome:'Escudo Vital (Guardião)', desc:'+5 PV Máximos adicionais.'},
+    {nome:'Oportunista Implacável (Algoz)', desc:'Dano Extra de Algoz aumenta de 1d6 para 1d8.'},
+    {nome:'Ataque Espiral (Algoz)', desc:'No crítico, realiza Ajuste (Shift) de 2 quadrados como Ação Livre.'},
+    {nome:'Presença Inspiradora (Guia)', desc:'Aliado curado por Suporte Tático ganha uma Salvação imediata.'},
+    {nome:'Líder de Vanguarda (Guia)', desc:'Ataques bônus concedidos a aliados causam +2 de dano.'},
+    {nome:'Distorção Ampliada (Dominador)', desc:'1×/encontro, aumenta o raio de uma área do Persona em +1 sq.'},
+    {nome:'Condição Persistente (Dominador)', desc:'Condições de 1 turno passam a exigir teste de Salvação no fim do turno inimigo.'}
+  ],
+  'Elementais': [
+    {nome:'Foco Elemental', desc:'+2 de dano em habilidades do elemento escolhido.'},
+    {nome:'Penetração Elemental', desc:'Ignora até 5 pontos de Resistência Elemental do alvo.'}
+  ],
+  'Perícia e Utilitários': [
+    {nome:'Detetive Urbano', desc:'+2 em Percepção. 1×/dia, descobre boatos ou abrigos em novos bairros.'},
+    {nome:'Leitura Corporal', desc:'+2 em Intuição. Permite detectar mentiras/emoções de NPCs após 1 min.'},
+    {nome:'Conexões Subterrâneas', desc:'+2 em Ladinagem/Manuseio Urbano. 20% de desconto no mercado negro.'},
+    {nome:'Hacker de Campo', desc:'+2 em Tecnologia. Invasões simples na metade do tempo, sem rastros.'},
+    {nome:'Memória Fotográfica', desc:'Recordação perfeita de documentos/rostos. +2 para decifrar símbolos/línguas.'},
+    {nome:'Primeiro Socorro Avançado', desc:'+2 em Cura. Em Descansos Curtos, cura +1d6 PV por pulso gasto.'},
+    {nome:'Presença Cativante', desc:'Re-rola 1×/dia falhas sociais em NPCs não-hostis.'},
+    {nome:'Atleta Urbano', desc:'+2 em Atletismo/Acrobacia. Ignora custo de escalada urbana e reduz queda em 1d10.'},
+    {nome:'Rastreamento Oculto', desc:'Usa Arcanismo/Religião para rastrear demônios/Personas no mundo real.'},
+    {nome:'Negociador Perspicaz', desc:'15% de desconto em compras e +15% em vendas de itens.'}
+  ]
+};
+
+function talentoOptionsHTML(selected){
+  let html = '<option value="">— selecione —</option>';
+  Object.keys(TALENTOS).forEach(categoria => {
+    html += `<optgroup label="${categoria}">`;
+    TALENTOS[categoria].forEach(t => {
+      const sel = t.nome === selected ? 'selected' : '';
+      html += `<option value="${t.nome}" ${sel}>${t.nome}</option>`;
+    });
+    html += '</optgroup>';
+  });
+  return html;
+}
+
+function findTalentoDesc(nome){
+  for(const categoria in TALENTOS){
+    const found = TALENTOS[categoria].find(t => t.nome === nome);
+    if(found) return found.desc;
+  }
+  return '';
+}
+
+// ---------- TALENTOS (lista aberta, cresce por nível) ----------
+let talentos = [{id:1, nivel:1, nome:''}];
+let talentoCounter = 1;
+
+function renderTalentos(){
+  const container = document.getElementById('talentosContainer');
+  container.innerHTML = '';
+  talentos.forEach(t => {
+    const row = document.createElement('div');
+    row.style.cssText = 'margin-bottom:10px;';
+    row.innerHTML = `
+      <div style="display:flex; gap:8px; align-items:flex-end;">
+        <div style="width:80px;"><label>Nível</label><input type="number" min="1" value="${t.nivel}" oninput="updateTalento(${t.id},'nivel',this.value)"></div>
+        <div style="flex:1;"><label>Talento</label><select onchange="updateTalento(${t.id},'nome',this.value)">${talentoOptionsHTML(t.nome)}</select></div>
+        <button class="btn" type="button" style="padding:8px 10px; font-size:.8rem;" onclick="removeTalento(${t.id})">✕</button>
+      </div>
+      <div class="hint" style="margin-top:4px;">${t.nome ? findTalentoDesc(t.nome) : ''}</div>
+    `;
+    container.appendChild(row);
+  });
+}
+
+function addTalento(){
+  talentoCounter++;
+  talentos.push({id: talentoCounter, nivel:1, nome:''});
+  renderTalentos();
+  saveState();
+}
+
+function removeTalento(id){
+  if(talentos.length <= 1) return;
+  talentos = talentos.filter(t => t.id !== id);
+  renderTalentos();
+  saveState();
+}
+
+function updateTalento(id, field, value){
+  const t = talentos.find(x => x.id === id);
+  if(t) t[field] = field === 'nivel' ? (parseInt(value)||1) : value;
+  if(field === 'nome') renderTalentos();
+  saveState();
+}
 
 const PODERES = {
   guardiao: {
@@ -744,7 +887,7 @@ ATTRS.forEach(a => {
     <h4>${a.label}</h4>
     <div class="attr-controls">
       <button onclick="changeAttr('${a.key}', -1)">−</button>
-      <div class="attr-val" id="val_${a.key}">10</div>
+      <div class="attr-val" id="val_${a.key}">8</div>
       <button onclick="changeAttr('${a.key}', 1)">+</button>
     </div>
     <div class="attr-mod" id="mod_${a.key}">Mod +0</div>
@@ -869,30 +1012,48 @@ document.getElementById('role').addEventListener('change', () => {
 function recalcAll(){
   const funcaoKey = document.getElementById('funcao').value;
   const funcao = FUNCOES[funcaoKey];
+  const forMod = mod(attrState.for);
   const conMod = mod(attrState.con);
   const desMod = mod(attrState.des);
+  const intMod = mod(attrState.int);
   const sabMod = mod(attrState.sab);
+  const carMod = mod(attrState.car);
 
   document.getElementById('pvInicial').textContent = funcao.pvBase + conMod;
   document.getElementById('pulsos').textContent = funcao.pulsoBase + conMod;
   document.getElementById('passiva').textContent = funcao.passiva;
+  document.getElementById('periciasSugeridas').textContent = funcao.pericias.join(', ');
 
+  const pvMax = funcao.pvBase + conMod;
+  document.getElementById('pulsoValor').textContent = Math.floor(pvMax / 4);
+  const pvAtuaisVal = parseInt(document.getElementById('pvAtuais').value);
+  const sangrandoEl = document.getElementById('sangrando');
+  if(!isNaN(pvAtuaisVal)){
+    const isBloodied = pvAtuaisVal <= Math.floor(pvMax / 2);
+    sangrandoEl.textContent = isBloodied ? 'SIM' : 'Não';
+    sangrandoEl.style.color = isBloodied ? 'var(--bad)' : 'var(--ok)';
+  } else {
+    sangrandoEl.textContent = '—';
+    sangrandoEl.style.color = 'var(--text-dim)';
+  }
+
+  // Defesas: CA/Reflexos = 10 + max(DEX,INT) · Fortitude = 10 + max(FOR,CON) · Vontade = 10 + max(SAB,CAR)
   const def = funcao.defesas || {};
-  document.getElementById('ca').textContent = 10 + desMod + (def.ca||0);
-  document.getElementById('fort').textContent = 10 + conMod + (def.fort||0);
-  document.getElementById('reflex').textContent = 10 + desMod + (def.reflex||0);
-  document.getElementById('vontade').textContent = 10 + sabMod + (def.vontade||0);
+  document.getElementById('ca').textContent = 10 + Math.max(desMod, intMod) + (def.ca||0);
+  document.getElementById('fort').textContent = 10 + Math.max(forMod, conMod) + (def.fort||0);
+  document.getElementById('reflex').textContent = 10 + Math.max(desMod, intMod) + (def.reflex||0);
+  document.getElementById('vontade').textContent = 10 + Math.max(sabMod, carMod) + (def.vontade||0);
 
   const arma = ARMAS[document.getElementById('arma').value];
   document.querySelector('#funcao').closest('.card-body'); // no-op keep structure
 
   const roleKey = document.getElementById('role').value;
-  const roleNames = {guardiao:'Guardião (Defender)', algoz:'Algoz (Striker)', guia:'Guia (Leader)', dominador:'Dominador (Controller)'};
+  const roleNames = {guardiao:'Guardião (Defender — Controle de Ameaça)', algoz:'Algoz (Striker — Dano Massivo)', guia:'Guia (Leader — Suporte Tático)', dominador:'Dominador (Controller — Controle de Campo)'};
   const roleDescs = {
-    guardiao:'Marcar 1 inimigo (Ação Menor, -2 ataque contra aliados). Retaliação básica se o marcado atacar aliado.',
-    algoz:'1x/turno ao acertar, +1d6 de dano elemental do seu tipo.',
-    guia:'2x/encontro (Ação Menor): aliado a 5 quadrados gasta Pulso de Cura e recupera +1d6 PV extras.',
-    dominador:'Ao acertar com magia, empurra 1 quadrado ou aplica Lentidão até fim do próximo turno do inimigo.'
+    guardiao:'Ação Menor para Marcar 1 inimigo (-2 no ataque contra aliados). Se o marcado atacar um aliado, faz um Ataque Básico Imediato em retaliação.',
+    algoz:'Uma vez por turno, ao acertar qualquer ataque, adiciona +1d6 de Dano Extra do seu Elemento Base.',
+    guia:'Duas vezes por encontro (Ação Menor): um aliado a até 5 quadrados gasta 1 Pulso de Cura e recupera os PV normais + 1d6 PV bônus.',
+    dominador:'Sempre que atingir alvos com magia, pode aplicar Deslocamento (empurrar 1 quadrado) ou infligir a condição Lento.'
   };
   document.getElementById('roleSummary').innerHTML = `<b>${roleNames[roleKey]}</b> — ${roleDescs[roleKey]}<br><b>Arma:</b> ${arma.label} (${arma.bonus} acerto, ${arma.dano}, ${arma.attr}) — ${arma.prop}`;
   if(typeof saveState === 'function') saveState();
@@ -900,9 +1061,16 @@ function recalcAll(){
 
 document.getElementById('funcao').addEventListener('change', recalcAll);
 document.getElementById('arma').addEventListener('change', recalcAll);
+document.getElementById('pvAtuais').addEventListener('input', recalcAll);
+
+function rolarDado(){
+  const sides = parseInt(document.getElementById('dadoTipo').value);
+  const result = Math.floor(Math.random() * sides) + 1;
+  document.getElementById('dadoResultado').textContent = `d${sides} → ${result}`;
+}
 
 // ---------- MOVIMENTOS (lista aberta) ----------
-let movimentos = [{id:1, nome:'Velocidade', base:'9 metros', armadura:'', item:'', misc:''}];
+let movimentos = [{id:1, nome:'Velocidade', base:'9 metros', item:'', misc:''}];
 let movCounter = 1;
 
 function renderMovimentos(){
@@ -914,7 +1082,6 @@ function renderMovimentos(){
     row.innerHTML = `
       <div style="flex:1.2;"><label>Nome</label><input type="text" value="${m.nome}" oninput="updateMovimento(${m.id},'nome',this.value)"></div>
       <div style="flex:1;"><label>Base</label><input type="text" value="${m.base}" oninput="updateMovimento(${m.id},'base',this.value)"></div>
-      <div style="flex:1;"><label>Armadura</label><input type="text" value="${m.armadura}" oninput="updateMovimento(${m.id},'armadura',this.value)"></div>
       <div style="flex:1;"><label>Item</label><input type="text" value="${m.item}" oninput="updateMovimento(${m.id},'item',this.value)"></div>
       <div style="flex:1;"><label>Misc</label><input type="text" value="${m.misc}" oninput="updateMovimento(${m.id},'misc',this.value)"></div>
       <button class="btn" type="button" style="padding:8px 10px; font-size:.8rem;" onclick="removeMovimento(${m.id})">✕</button>
@@ -925,7 +1092,7 @@ function renderMovimentos(){
 
 function addMovimento(){
   movCounter++;
-  movimentos.push({id: movCounter, nome:'', base:'', armadura:'', item:'', misc:''});
+  movimentos.push({id: movCounter, nome:'', base:'', item:'', misc:''});
   renderMovimentos();
   saveState();
 }
@@ -955,6 +1122,7 @@ function saveState(){
     });
     state.__attrState = attrState;
     state.__movimentos = movimentos;
+    state.__talentos = talentos;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }catch(e){
     console.warn('Não foi possível salvar localmente:', e);
@@ -972,15 +1140,24 @@ function loadState(){
       movimentos = state.__movimentos;
       movCounter = Math.max(...movimentos.map(m => m.id), 0);
     }
+    if(state.__talentos && state.__talentos.length){
+      talentos = state.__talentos;
+      talentoCounter = Math.max(...talentos.map(t => t.id), 0);
+    }
 
     // restaura selects que afetam a geração de outros elementos primeiro
     ['funcao','arma','elemento','role'].forEach(id => {
       if(state[id] !== undefined && document.getElementById(id)) document.getElementById(id).value = state[id];
     });
+    if(state.maxPoints !== undefined){
+      document.getElementById('maxPoints').value = state.maxPoints;
+      MAX_POINTS = parseInt(state.maxPoints) || 32;
+    }
 
     renderAttrs();
     renderPoderes();
     renderMovimentos();
+    renderTalentos();
 
     // restaura todo o resto (inclusive checkboxes de perícias e poderes, já existentes no DOM)
     Object.keys(state).forEach(id => {
@@ -1009,26 +1186,31 @@ function resetSheet(){
   document.querySelectorAll('input[type=text], input[type=number], textarea').forEach(el => el.value = '');
   document.getElementById('nivel').value = 1;
   document.getElementById('xp').value = 0;
-  ATTRS.forEach(a => attrState[a.key] = 10);
+  document.getElementById('maxPoints').value = 32;
+  MAX_POINTS = 32;
+  ATTRS.forEach(a => attrState[a.key] = 8);
   document.querySelectorAll('.pericia-row input[type=checkbox]').forEach(cb => cb.checked = false);
   ['falha1','falha2','falha3'].forEach(id => document.getElementById(id).checked = false);
   document.getElementById('funcao').selectedIndex = 0;
   document.getElementById('arma').selectedIndex = 0;
   document.getElementById('elemento').selectedIndex = 0;
   document.getElementById('role').selectedIndex = 0;
-  movimentos = [{id:1, nome:'Velocidade', base:'9 metros', armadura:'', item:'', misc:''}];
+  movimentos = [{id:1, nome:'Velocidade', base:'9 metros', item:'', misc:''}];
   movCounter = 1;
+  talentos = [{id:1, nivel:1, nome:''}];
+  talentoCounter = 1;
   renderAttrs();
   updatePericias();
   renderPoderes();
   renderMovimentos();
+  renderTalentos();
   recalcAll();
   localStorage.removeItem(STORAGE_KEY);
 }
 
 // ---------- EXPORT ----------
-const FUNCAO_LABEL = {tanque:'Tanque', dps:'DPS / Atacante', mago:'Usuário Mágico'};
-const ELEMENTO_LABEL = {fogo:'Fogo (Agi)', gelo:'Gelo (Bufu)', trovao:'Trovão (Zio)', vento:'Vento (Garu)', agua:'Água (Aqua)', nuclear:'Nuclear (Frei)', luz:'Luz (Kouha)', escuridao:'Escuridão (Eiha)'};
+const FUNCAO_LABEL = {vigoroso:'O Vigoroso', preciso:'O Preciso', intuitivo:'O Intuitivo'};
+const ELEMENTO_LABEL = {fogo:'Fogo (Agi) — Queimadura', gelo:'Gelo (Bufu) — Congelamento', trovao:'Trovão (Zio) — Paralisia', vento:'Vento (Garu) — Impacto (Prone)', agua:'Água (Aqua) — Desequilíbrio (-2 CA/Reflexos)', nuclear:'Nuclear (Frei) — Explosão', luz:'Luz (Kouha) — Cegueira', escuridao:'Escuridão (Eiha) — Dreno'};
 const ROLE_LABEL = {guardiao:'Guardião (Defender)', algoz:'Algoz (Striker)', guia:'Guia (Leader)', dominador:'Dominador (Controller)'};
 
 function val(id){ return document.getElementById(id).value || ''; }
@@ -1036,8 +1218,8 @@ function txt(id){ return document.getElementById(id).textContent || ''; }
 
 function fillPrintSheet(){
   document.getElementById('ps_nome').textContent = val('nome');
-  document.getElementById('ps_arquetipo').textContent = val('arquetipo');
-  document.getElementById('ps_funcao').textContent = FUNCAO_LABEL[document.getElementById('funcao').value];
+  document.getElementById('ps_arquetipo').textContent = FUNCAO_LABEL[document.getElementById('funcao').value];
+  document.getElementById('ps_funcao').textContent = ROLE_LABEL[document.getElementById('role').value];
   document.getElementById('ps_nivel').textContent = val('nivel');
   document.getElementById('ps_persona').textContent = val('persona');
   document.getElementById('ps_arcano').textContent = val('arcano');
@@ -1053,7 +1235,8 @@ function fillPrintSheet(){
   document.getElementById('ps_pulsos').textContent = txt('pulsos');
   document.getElementById('ps_passiva').textContent = txt('passiva');
   document.getElementById('ps_sangramento').textContent = val('sangramento');
-  document.getElementById('ps_pulsosPorDia').textContent = val('pulsosPorDia');
+  document.getElementById('ps_pulsoValor').textContent = txt('pulsoValor');
+  document.getElementById('ps_sangrando').textContent = txt('sangrando');
   document.getElementById('ps_pvAtuais').textContent = val('pvAtuais');
   document.getElementById('ps_pvTemp').textContent = val('pvTemp');
   document.getElementById('ps_pulsoBonus').textContent = val('pulsoBonus');
@@ -1106,22 +1289,21 @@ function fillPrintSheet(){
   movTable.querySelectorAll('tr:not(:first-child)').forEach(tr => tr.remove());
   movimentos.forEach(m => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${m.base||''}</td><td class="ps-label">${m.nome||''}</td><td>${m.armadura||''}</td><td>${m.item||''}</td><td>${m.misc||''}</td>`;
+    tr.innerHTML = `<td>${m.base||''}</td><td class="ps-label">${m.nome||''}</td><td>${m.item||''}</td><td>${m.misc||''}</td>`;
     movTable.appendChild(tr);
   });
   document.getElementById('ps_movimentoEspecial').textContent = val('movimentoEspecial');
 
-  // Talentos (Nome; Level; Pré-requisitos; Nível Mínimo; Descrição)
+  // Talentos (lista dinâmica nível + nome)
   const talentosTable = document.getElementById('ps_talentos_table');
   talentosTable.querySelectorAll('tr:not(:first-child)').forEach(tr => tr.remove());
-  const talentoLines = (val('talentosInput') || '').split('\n').map(l => l.trim()).filter(l => l !== '');
-  talentoLines.forEach(line => {
-    const parts = line.split(';').map(s => s.trim());
+  const talentosComNome = talentos.filter(t => t.nome);
+  talentosComNome.forEach(t => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${parts[0]||''}</td><td>${parts[1]||''}</td><td>${parts[2]||''}</td><td>${parts[3]||''}</td><td>${parts[4]||''}</td>`;
+    tr.innerHTML = `<td>${t.nome}</td><td>${t.nivel}</td><td>—</td><td>${t.nivel}</td><td>${findTalentoDesc(t.nome)}</td>`;
     talentosTable.appendChild(tr);
   });
-  if(talentoLines.length === 0){
+  if(talentosComNome.length === 0){
     const tr = document.createElement('tr');
     tr.innerHTML = `<td></td><td></td><td></td><td></td><td></td>`;
     talentosTable.appendChild(tr);
@@ -1214,6 +1396,7 @@ renderAttrs();
 updatePericias();
 renderPoderes();
 renderMovimentos();
+renderTalentos();
 recalcAll();
 loadState();
 </script>
